@@ -5,7 +5,6 @@ This project uses Snowflake-native features for scalable, reliable data ingestio
 
 ## Schema Design
 The database is organized using a layered schema approach:
-
 - **RAW / STAGING**  
   Stores ingested data loaded directly from files using `COPY INTO`
 
@@ -18,7 +17,6 @@ This separation supports clear data lineage and simplifies downstream analytics.
 
 ## Loading Strategy
 Data ingestion is handled using Snowflake-native mechanisms:
-
 - Files uploaded to an internal Snowflake stage using `PUT`
 - Data loaded into tables using `COPY INTO`
 - Automatic file compression (`.csv.gz`)
