@@ -7,17 +7,7 @@ The design follows industry best practices by separating ingestion, orchestratio
 ## High-Level Architecture
 Source Files (CSV / CDC-style)
 ↓ 
-MinIO (S3-compatible Object Storage)
-        ↓ 
-Snowflake Internal Stage
-        ↓ 
-Snowflake COPY INTO
-(RAW / STAGING Tables)
-        ↓ 
-dbt Transformations
-(STAGING → MART Models)
-        ↓ 
-Analytics / BI Consumption
+MinIO (S3-compatible Object Storage) -> Snowflake Internal Stage -> Snowflake COPY INTO (RAW / STAGING Tables) -> dbt Transformations (STAGING → MART Models) -> Analytics / BI Consumption
 
 ---
 
