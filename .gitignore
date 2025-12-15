@@ -1,0 +1,34 @@
+# Secrets
+.env
+*.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+
+# Airflow runtime
+airflow/airflow.db
+airflow/*.db
+airflow/logs/
+airflow/*.pid
+airflow/airflow.cfg
+
+# Logs
+logs/
+**/logs/
+
+# MinIO runtime data
+docker/minio/data/
+**/.minio.sys/
+
+# dbt artifacts
+snowflake/target/
+snowflake/dbt_packages/
+snowflake/logs/
+snowflake/.user.yml
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/

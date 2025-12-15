@@ -1,0 +1,81 @@
+version: 2
+
+# ---------------------------------------------------------
+# SOURCES (physical table in STAGING)
+# ---------------------------------------------------------
+sources:
+  - name: snowflake_source
+    database: dbt_elt
+    schema: staging
+    description: snowflake staging layer
+
+    tables:
+      - name: orders
+        description: stores order database
+
+        columns:
+          - name: order_id
+            description: A unique order ID
+            tests:
+              - unique:
+                  severity: warn
+              - not_null
+
+          - name: customer_id
+            description: A unique customer ID
+            tests:
+              - unique:
+                  severity: warn
+              - not_null
+
+          - name: order_date
+            description: A random date within the current year
+
+          - name: status
+            description: A randomly selected order status, such as CREATED, SHIPPED, DELIVERED, or CANCELLED
+
+          - name: product_id
+            description: A unique product ID
+
+          - name: quantity
+            description: A random quantity between 1 and 5
+
+          - name: price
+            description: A random price between 10 and 500
+
+          - name: total_amount
+            description: This is calculated as quantity * price
+
+# ---------------------------------------------------------
+# MODELS
+# ---------------------------------------------------------
+models:
+
+  # Ephemeral staging model (built on top of snowflake_source.orders)
+  - name: stg_orders
+    description: "Ephemeral staging model built from snowflake_source.orders"
+
+  # Incremental model in BASE schema (mart layer)
+  - name: incremental_orders
+    description: "Incremental base orders table built from stg_orders"
+    columns:
+      - name: ORDERID
+        description: "Primary business key for orders"
+        tests:
+          - not_null
+          - unique
+
+      - name: CUSTOMERID
+        description: "CustomerId for this order"
+        tests:
+          - not_null
+
+      - name: ORDERDATE
+        description: "Order date"
+        tests:
+          - not_null
+
+      - name: TOTALAMOUNT
+        description: "Final order amount"
+        tests:
+          - not_null

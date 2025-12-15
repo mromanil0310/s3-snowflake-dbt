@@ -1,0 +1,85 @@
+services:
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./docker/minio/data:/data
+
+  airflow-init:
+    build:
+      context: .
+      dockerfile: dockerfile-airflow.dockerfile
+    image: s3-snowflake-dbt-airflow:latest
+    container_name: airflow-init
+    depends_on:
+      - minio
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "changeme_super_secret"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True"
+      DBT_PROFILES_DIR: /opt/dbt
+    volumes:
+      - ./airflow:/opt/airflow
+      - ./snowflake:/opt/dbt
+    command: >
+      bash -c "airflow db migrate"
+
+  airflow-webserver:
+    build:
+      context: .
+      dockerfile: dockerfile-airflow.dockerfile
+    image: s3-snowflake-dbt-airflow:latest
+    container_name: airflow-webserver
+    depends_on:
+      - minio
+      - airflow-init
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__WEBSERVER__SECRET_KEY: "changeme_super_secret"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True"
+      DBT_PROFILES_DIR: /opt/dbt
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow:/opt/airflow
+      - ./snowflake:/opt/dbt
+    command: >
+      bash -c "airflow webserver"
+
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: dockerfile-airflow.dockerfile
+    image: s3-snowflake-dbt-airflow:latest
+    container_name: airflow-scheduler
+    depends_on:
+      - airflow-webserver
+      - minio
+      - airflow-init
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "True"
+      DBT_PROFILES_DIR: /opt/dbt
+    volumes:
+      - ./airflow:/opt/airflow
+      - ./snowflake:/opt/dbt
+    command: >
+      bash -c "airflow scheduler"
