@@ -21,7 +21,6 @@ MinIO (S3-compatible Object Storage) -> Snowflake Internal Stage -> Snowflake CO
 
 ### Snowflake
 Snowflake serves as the central data warehouse and ingestion engine.
-
 Responsibilities:
 - Stores raw and transformed data
 - Manages internal stages for file ingestion
@@ -36,7 +35,6 @@ Schemas are logically separated to support data lineage:
 
 ### Apache Airflow
 Airflow orchestrates the end-to-end pipeline.
-
 Responsibilities:
 - Coordinates ingestion and transformation steps
 - Ensures dbt runs only after successful data loading
@@ -51,7 +49,6 @@ DAGs are intentionally scoped to single responsibilities:
 
 ### dbt
 dbt handles all transformation logic within Snowflake.
-
 Responsibilities:
 - Applies business logic and data modeling
 - Implements staging and mart layers
