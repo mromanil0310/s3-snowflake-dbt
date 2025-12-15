@@ -6,7 +6,7 @@ The design follows industry best practices by separating ingestion, orchestratio
 
 ## High-Level Architecture
 Source Files (CSV / CDC-style)
-        ↓ 
+↓ 
 MinIO (S3-compatible Object Storage)
         ↓ 
 Snowflake Internal Stage
