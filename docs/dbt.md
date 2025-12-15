@@ -5,7 +5,6 @@ dbt is used to transform data loaded into Snowflake, following a layered modelin
 
 ## Environment Configuration
 dbt is configured using environment variables to support portability across environments (local, Docker, CI).
-
 Key variables include:
 
 - `SNOWFLAKE_DATABASE`
@@ -22,7 +21,6 @@ These variables are referenced in `profiles.yml` using `env_var()`.
 
 ## Execution Workflow
 Typical dbt execution flow:
-
 ```bash
 dbt debug
 dbt run
