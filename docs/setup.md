@@ -13,7 +13,6 @@ This guide explains how to run the Snowflake ELT pipeline locally using Docker.
 
 ## Environment Configuration
 Create a `.env` file in the project root with the following variables:
-
 ```env
 SNOWFLAKE_ACCOUNT=xxxx.ap-southeast-1
 SNOWFLAKE_USER=xxxx
