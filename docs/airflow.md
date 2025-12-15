@@ -6,7 +6,6 @@ Apache Airflow is used to orchestrate the end-to-end ELT workflow, ensuring that
 ## DAGs
 ### copy_into_raw
 Handles data ingestion into Snowflake.
-
 Responsibilities:
 - Uploads files to a Snowflake internal stage (`PUT`)
 - Executes Snowflake `COPY INTO` to load data into the STAGING layer
@@ -16,7 +15,6 @@ Responsibilities:
 
 ### dbt_snowflake_pipeline
 Handles data transformation using dbt.
-
 Responsibilities:
 - Validates Snowflake connectivity (`dbt debug`)
 - Executes dbt staging models
@@ -25,10 +23,6 @@ Responsibilities:
 ---
 
 ## Execution Flow
-copy_into_raw
-      ↓
-TriggerDagRunOperator
-      ↓
-dbt_snowflake_pipeline
+copy_into_raw -> TriggerDagRunOperator -> dbt_snowflake_pipeline
 
 This design enforces clear dependency management and ensures transformations run only after successful ingestion.
